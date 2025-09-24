@@ -35,7 +35,7 @@ Breast cancer affects **2.3 million women annually** worldwide, with early detec
 Radiologists naturally employ **multi-view reasoning**, examining both ipsilateral views (CC and MLO of the same breast) and bilateral symmetry (left vs. right breast) to cross-validate findings. This project implements an **Anatomy-aware Graph Neural Network (AGN)** to replicate this clinical reasoning process in automated breast cancer detection.
 
 <div align="center">
-  <img src="Assets/mammography_views.png" alt="Mammography views and reasoning" width="70%">
+  <img src="figures/mammogram.png" alt="Mammography views and reasoning" width="70%">
   <p><em>Multi-view mammographic analysis: CC and MLO views with anatomical landmarks</em></p>
 </div>
 
@@ -98,7 +98,7 @@ The CBIS-DDSM dataset presented several critical inconsistencies requiring syste
 Non-anatomical information introduced during digitalization requires removal through coordinate-based cropping and removing artefacts outside the contour:
 
 <div align="center">
-  <img src="Assets/preprocessing_crop.png" alt="Artifact removal example" width="60%">
+  <img src="figures/preprocessing1.png" alt="Artifact removal example" width="60%">
   <p><em>Example of cropping results: (a) Original with artifacts (b) Cleaned mammogram</em></p>
 </div>
 
@@ -107,14 +107,17 @@ Non-anatomical information introduced during digitalization requires removal thr
 Anatomical orientation standardization ensures consistent laterality across the dataset:
 
 <div align="center">
-  <img src="Assets/preprocessing_flip.png" alt="Orientation correction example" width="60%">
+  <img src="figures/pre_flip.png" alt="Orientation correction example" width="60%">
   <p><em>Flipping logic illustration: (a) Incorrect orientation (b) Corrected orientation</em></p>
 </div>
 
 #### Corrupted File Recovery
 
 Some ROI files were mistakenly replaced with binary masks. Our solution extracts bounding boxes from the largest connected components:
-
+<div align="center">
+  <img src="figures/preprocessing2.png" alt="Orientation correction example" width="60%">
+  <p><em>Flipping logic illustration: (a) Incorrect orientation (b) Corrected orientation</em></p>
+</div>
 
 ### Structural Elements Calculation
 
@@ -151,7 +154,7 @@ s = {
 }
 
 <div align="center">
-  <img src="Assets/contour_smoothing.png" alt="Contour extraction and smoothing" width="50%">
+  <img src="figures/contour.png" alt="Contour extraction and smoothing" width="50%">
   <p><em>Contour extraction: (a) Raw extracted contour (b) B-spline smoothed contour</em></p>
 </div>
 
@@ -188,7 +191,7 @@ $$\text{valid}(L_i) = \begin{cases}
 $$\text{score}(L_i) = \text{length}(L_i) \cdot (w_{pos} \cdot \text{pos\_score} + w_{angle} \cdot \text{angle\_score})$$
 
 <div align="center">
-  <img src="Assets/pectoral_detection.png" alt="Pectoral muscle detection pipeline" width="80%">
+  <img src="figures/pectoral.png" alt="Pectoral muscle detection pipeline" width="80%">
   <p><em>Pectoral muscle detection: (a) Original MLO (b) ROI+CLAHE (c) Thresholding (d) Morphological ops (e) Edge detection (f) Final line detection</em></p>
 </div>
 
@@ -208,7 +211,7 @@ where:
 - $\mathcal{G}_I$: Inception graph for bilateral analysis
 
 <div align="center">
-  <img src="Assets/agn_architecture.png" alt="AGN Architecture" width="80%">
+  <img src="figures/AGN" alt="AGN Architecture" width="80%">
   <p><em>Anatomy-aware Graph Neural Network architecture with dual-graph reasoning</em></p>
 </div>
 
@@ -255,7 +258,7 @@ def optimize_anchors(annotations):
 - **FPN Level Mapping:** Scales divided by corresponding stride values [4, 8, 16, 32, 64]
 
 <div align="center">
-  <img src="Assets/anchor_analysis.png" alt="Anchor optimization analysis" width="60%">
+  <img src="figures/anchor_analysis.png" alt="Anchor optimization analysis" width="60%">
   <p><em>Anchor optimization: Width vs height distribution with optimized anchor positioning</em></p>
 </div>
 
@@ -339,7 +342,7 @@ $$\kappa(u) = \frac{x'(u)y''(u) - y'(u)x''(u)}{(x'(u)^2 + y'(u)^2)^{3/2}}$$
 $$\text{score}(i) = |\kappa(u_i)|$$
 
 <div align="center">
-  <img src="Assets/nipple_detection.png" alt="Nipple detection methodology" width="70%">
+  <img src="figures/nipple_detection.png" alt="Nipple detection methodology" width="70%">
   <p><em>Nipple detection: (a) MLO curvature analysis (b) CC lateralmost point detection</em></p>
 </div>
 
@@ -374,7 +377,7 @@ Uniform node distribution along each line ensures consistent coverage:
 $$\vec{p}_{node\_i} = \vec{p}_{start} + \frac{i}{k-1}(\vec{p}_{end} - \vec{p}_{start}), \quad i \in \{0, 1, \ldots, k-1\}$$
 
 <div align="center">
-  <img src="Assets/landmark_generation.png" alt="Pseudo-landmark generation" width="70%">
+  <img src="figures/landmark_generation.png" alt="Pseudo-landmark generation" width="70%">
   <p><em>Pseudo-landmark generation: (a) CC view with landmarks (b) MLO view with structured node placement</em></p>
 </div>
 
@@ -432,7 +435,7 @@ H^T & \mathbf{0}
 $$Z^B = \sigma(H^B X^B W^B)$$
 
 <div align="center">
-  <img src="Assets/bipartite_graph.png" alt="Bipartite Graph Network structure" width="50%">
+  <img src="figures/bipartite_graph.png" alt="Bipartite Graph Network structure" width="50%">
   <p><em>BGN architecture showing connections between CC and MLO view nodes</em></p>
 </div>
 
@@ -458,7 +461,7 @@ Multi-scale neighborhood processing:
 $$Z^I = \sigma\left(\begin{pmatrix}\hat{J}_{s_1} & \hat{J}_{s_2} & \hat{J}_{s_3}\end{pmatrix} \begin{pmatrix}X^I & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & X^I & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & X^I\end{pmatrix} \begin{pmatrix}W^I_1 \\ W^I_2 \\ W^I_3\end{pmatrix}\right)$$
 
 <div align="center">
-  <img src="Assets/inception_graph.png" alt="Inception Graph Network" width="50%">
+  <img src="figures/inception_graph.png" alt="Inception Graph Network" width="50%">
   <p><em>IGN with multi-branch connections for bilateral symmetry analysis</em></p>
 </div>
 
@@ -595,7 +598,7 @@ where $S$ is the dynamic scaling factor updated based on overflow detection.
 The optimized anchor configuration demonstrated appropriate size distribution alignment between predictions and ground truth, with both distributions centered around $10^3-10^4$ pixels² range.
 
 <div align="center">
-  <img src="Assets/anchor_validation.png" alt="Anchor configuration validation" width="60%">
+  <img src="figures/anchor_validation.png" alt="Anchor configuration validation" width="60%">
   <p><em>Logarithmic area distribution comparison between model predictions and ground truth</em></p>
 </div>
 
@@ -621,7 +624,7 @@ The optimized anchor configuration demonstrated appropriate size distribution al
 - **Recall:** 0.53
 
 <div align="center">
-  <img src="Assets/threshold_analysis.png" alt="Threshold sensitivity analysis" width="70%">
+  <img src="figures/threshold_analysis.png" alt="Threshold sensitivity analysis" width="70%">
   <p><em>Performance metrics vs confidence threshold showing F1-maximized optimal point</em></p>
 </div>
 
@@ -638,7 +641,7 @@ The AGN demonstrates clear improvements in feature quality:
 **Spatial Consistency:** Multi-view reasoning maintains anatomical coherence across view transformations
 
 <div align="center">
-  <img src="Assets/agn_feature_analysis.png" alt="AGN Feature Enhancement" width="70%">
+  <img src="figures/agn_feature_analysis.png" alt="AGN Feature Enhancement" width="70%">
   <p><em>Feature map comparison (Epoch 3, Batch 11): (a) Standard features (b) AGN-enhanced features showing improved mass localization</em></p>
 </div>
 
